@@ -1,0 +1,47 @@
+name: nexus_mobile
+description: A mobile client for Nexus social network
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.5
+  # Network and API
+  dio: ^5.3.2
+  http: ^1.1.0
+  # State management
+  provider: ^6.0.5
+  # Storage
+  shared_preferences: ^2.2.0
+  flutter_secure_storage: ^8.0.0
+  # UI utilities
+  cached_network_image: ^3.2.3
+  flutter_svg: ^2.0.7
+  timeago: ^3.5.0
+  image_picker: ^1.0.2
+  photo_view: ^0.14.0
+  video_player: ^2.7.0
+  # Form handling
+  form_field_validator: ^1.1.0
+  # Utilities
+  intl: ^0.18.1
+  url_launcher: ^6.1.12
+  path_provider: ^2.1.0
+  connectivity_plus: ^4.0.2
+  uuid: ^3.0.7
+  logger: ^1.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/

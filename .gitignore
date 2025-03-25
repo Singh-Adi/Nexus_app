@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+.env.local
+.env.development
+
+# Logs
+logs/
+*.log
+
+# Build files
+build/
+dist/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Mobile app specific
+mobile-app/ios/Pods/
+mobile-app/android/app/build/
+mobile-app/android/.gradle/
