@@ -17,7 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -27,44 +27,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final success = await authProvider.register(
-        username: _usernameController.text.trim(),
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        passwordConfirm: _confirmPasswordController.text,
-        phoneNumber: _phoneController.text.trim().isEmpty 
-            ? null 
-            : _phoneController.text.trim(),
-      );
-      
-      if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful! Please check your email for verification.'),
-            backgroundColor: Colors.green,
-          ),
+
+      try {
+        final success = await authProvider.register(
+          username: _usernameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          passwordConfirm: _confirmPasswordController.text,
+          phoneNumber: _phoneController.text.trim().isEmpty
+              ? null
+              : _phoneController.text.trim(),
         );
-        Navigator.pop(context); // Go back to login screen
-      } else if (mounted) {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authProvider.error ?? 'Registration failed'),
-            backgroundColor: Colors.red,
-          ),
-        );
+
+        if (success && mounted) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Registration successful! Please check your email for verification.'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 3),
+            ),
+          );
+
+          // Wait for the snackbar to be visible
+          await Future.delayed(const Duration(seconds: 1));
+
+          // Pop back to login screen
+          if (mounted) {
+            Navigator.pop(context);
+          }
+        } else if (mounted) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(authProvider.error ?? 'Registration failed'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${e.toString()}'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -91,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Email Field
                   TextFormField(
                     controller: _emailController,
@@ -105,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Phone Field (Optional)
                   TextFormField(
                     controller: _phoneController,
@@ -120,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Password Field
                   TextFormField(
                     controller: _passwordController,
@@ -130,7 +155,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          _obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
@@ -144,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Confirm Password Field
                   TextFormField(
                     controller: _confirmPasswordController,
@@ -154,7 +181,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                          _obscureConfirmPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
@@ -165,14 +194,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     obscureText: _obscureConfirmPassword,
                     validator: (value) => Validators.validateConfirmPassword(
-                      value, 
+                      value,
                       _passwordController.text,
                     ),
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _register(),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Register Button
                   ElevatedButton(
                     onPressed: authProvider.isLoading ? null : _register,
@@ -187,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Login Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
